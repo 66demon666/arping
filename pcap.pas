@@ -8,31 +8,8 @@ const
   PCAP_SRC_IF_STRING = 'rpcap://';
   PCAP_ERRBUF_SIZE = 256;
   PCAP_OPENFLAG_PROMISCUOUS = 1;
-  ETHERTYPE_ARP = $0806;
 
 type
-
-  PArpPacket = ^TArpPacket;
-
-  TArpPacket = packed record
-    htype: smallint;
-    ptype: smallint;
-    hlen: byte;
-    plen: byte;
-    oper: smallint;
-    sha: array [1 .. 6] of byte;
-    spa: array [1 .. 4] of byte;
-    tha: array [1 .. 6] of byte;
-    tpa: array [1 .. 4] of byte;
-  end;
-
-  PEtherHeader = ^TetherHeader;
-
-  TetherHeader = packed record
-    destination: array [1 .. 6] of byte;
-    source: array [1 .. 6] of byte;
-    ethertype: word;
-  end;
 
   TTimeval = record
     tv_sec: Longint; // Секунды
