@@ -11,7 +11,8 @@ uses
   System.Classes,
   DebugUtils in 'DebugUtils.pas',
   packet in 'packet.pas',
-  Utils in 'Utils.pas';
+  Utils in 'Utils.pas',
+  ARPTimerThread in 'ARPTimerThread.pas';
 
 const
   IF_ID = '\Device\NPF_{077C8EF5-CB84-4C34-9C2A-66006D41D835}';
@@ -28,6 +29,7 @@ var
   fp: Tbpf_program;
   filter: AnsiString;
   arp_payload: TArpPacket;
+  timer:ARPTimerThread.Timer;
 
 procedure packet_handler(param: PByte; pkthdr: PPcap_pkthdr;
   packet_data: PByte);
@@ -75,7 +77,7 @@ begin
       end;
       Writeln('Listing finished');
       Writeln('Trying open interface');
-      adhandle := pcap_open(IF_ID_2, 655536, PCAP_OPENFLAG_PROMISCUOUS, 1000,
+      adhandle := pcap_open(IF_ID, 655536, PCAP_OPENFLAG_PROMISCUOUS, 1000,
         nil, @errbuf);
       if (adhandle = nil) then
       begin
@@ -109,12 +111,12 @@ begin
           hlen := 6;
           plen := 4;
           oper := htons(1);
-          sha[0] := $38;
-          sha[1] := $D5;
-          sha[2] := $47;
-          sha[3] := $19;
-          sha[4] := $DB;
-          sha[5] := $D6;
+          sha[0] := $50;
+          sha[1] := $E5;
+          sha[2] := $49;
+          sha[3] := $DE;
+          sha[4] := $68;
+          sha[5] := $89;
           spa[0] := $A;
           spa[1] := $1;
           spa[2] := $2;
@@ -139,13 +141,15 @@ begin
         Writeln('Filter compilation: ' + IntToStr(pcap_compile(adhandle, @fp,
           PAnsiChar(filter), 1, $FFFFFF00)));
         Writeln('Set filter: ' + IntToStr(pcap_setfilter(adhandle, @fp)));
+        timer:=ARPTimerThread.Timer.Create(1000);
+        //timer.Start;
         //pcap_loop(adhandle, 0, packet_handler, nil);
         //pcap_sendpacket(adhandle, @packet_buffer[0], Length(packet_buffer));
-         while true do
-         begin
-         pcap_sendpacket(adhandle, @packet_buffer[0], Length(packet_buffer));
-         sleep(1000);
-       end;
+         //while true do
+         //begin
+         //pcap_sendpacket(adhandle, @packet_buffer[0], Length(packet_buffer));
+         //sleep(1000);
+       //end;
 
         readln;
       end;
