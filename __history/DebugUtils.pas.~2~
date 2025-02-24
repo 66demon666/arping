@@ -1,0 +1,17 @@
+unit DebugUtils;
+
+interface
+
+uses System.SysUtils;
+
+implementation
+
+procedure PrintArray(arr: array of Byte);
+begin
+  for var i := Low(arr) to High(arr) do
+  begin
+    write(IntToHex(arr[i], 2) + ' ')
+  end;
+end;
+
+end.

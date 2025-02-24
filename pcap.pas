@@ -11,6 +11,22 @@ const
 
 type
 
+  Pbpf_insn = ^Tbpf_insn;
+
+  Tbpf_insn = record
+    code: Word; // Код операции
+    jt: Byte; // Индекс перехода, если true
+    jf: Byte; // Индекс перехода, если false
+    k: Cardinal; // Дополнительные данные
+  end;
+
+  Pbpf_program = ^Tbpf_program;
+
+  Tbpf_program = record
+    bf_len: Cardinal; // Количество инструкций
+    bf_insns: Pbpf_insn; // Указатель на массив инструкций
+  end;
+
   TTimeval = record
     tv_sec: Longint; // Секунды
     tv_usec: Longint; // Микросекунды
@@ -20,8 +36,8 @@ type
 
   TPcap_pkthdr = packed record
     ts: TTimeval;
-    caplen: cardinal;
-    len: cardinal;
+    caplen: Cardinal;
+    len: Cardinal;
   end;
 
   PPcap_pkthdr = ^TPcap_pkthdr;
@@ -56,7 +72,7 @@ type
     name: PAnsiChar;
     description: PAnsiChar;
     addresses: PPcap_addr;
-    flags: cardinal;
+    flags: Cardinal;
   end;
 
   PPcap_t = ^Tpcap_t;
@@ -78,6 +94,10 @@ function pcap_loop(pcap_t: PPcap_t; some_int: integer; handler: tpcap_handler;
 procedure pcap_close(pcap_t: PPcap_t); stdcall; external 'wpcap.dll';
 function pcap_sendpacket(pcap_t: PPcap_t; buffer: PByte; size: integer)
   : integer; stdcall; external 'wpcap.dll';
+function pcap_compile(pcap_t: PPcap_t; fp: Pbpf_program; str: PAnsiChar;
+  optimize: integer; netmask: Cardinal): integer; stdcall; external 'wpcap.dll';
+function pcap_setfilter(pcap_t: PPcap_t; fp: Pbpf_program): integer; stdcall;
+  external 'wpcap.dll';
 
 implementation
 

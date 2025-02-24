@@ -105,6 +105,7 @@
         <DCCReference Include="pcap.pas"/>
         <DCCReference Include="DebugUtils.pas"/>
         <DCCReference Include="packet.pas"/>
+        <DCCReference Include="Utils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
