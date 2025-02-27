@@ -94,11 +94,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="pcap.pas"/>
-        <DCCReference Include="DebugUtils.pas"/>
-        <DCCReference Include="packet.pas"/>
-        <DCCReference Include="Utils.pas"/>
-        <DCCReference Include="ARPTimerThread.pas"/>
+        <DCCReference Include="UserInteractive.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

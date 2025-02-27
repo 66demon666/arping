@@ -3,7 +3,7 @@ unit ARPTimerThread;
 interface
 
 uses
-  System.Classes, SysUtils, DateUtils, PcapTypes;
+  System.Classes, SysUtils, DateUtils, pcap;
 
 type
   Timer = class(TThread)

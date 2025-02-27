@@ -1,0 +1,83 @@
+program ArpPing;
+
+{$APPTYPE CONSOLE}
+{$R *.res}
+
+uses
+  System.SysUtils,
+  WinSock2,
+  pcap in 'pcap.pas',
+  Windows,
+  System.Classes,
+  DebugUtils in 'DebugUtils.pas',
+  packet in 'packet.pas',
+  Utils in 'Utils.pas',
+  ARPTimerThread in 'ARPTimerThread.pas',
+  PcapTypes in 'PcapTypes.pas';
+
+const
+  IF_ID = '\Device\NPF_{077C8EF5-CB84-4C34-9C2A-66006D41D835}';
+  IF_ID_2 = '\Device\NPF_{9C22769D-724A-4B92-814A-605A36AAF2CC}';
+
+var
+  alldevs, d: TPcap_if;
+  errbuf: TPcapErrbuf;
+  i: TPcap_if;
+  selected_interface: Integer;
+  adhandle: PPcap_t;
+  arp_ethernet: TetherHeader;
+  packet_buffer: array of byte;
+  fp: Tbpf_program;
+  filter: AnsiString;
+  arp_payload: TArpPacket;
+  timer: ARPTimerThread.timer;
+  ipStr:string;
+  addr:PPcap_addr;
+  a:TPcap;
+
+procedure packet_handler(param: PByte; pkthdr: PPcap_pkthdr;
+  packet_data: PByte);
+var
+  etherhdr: PEtherHeader;
+  ethertype: word;
+  arp_payload_income: PArpPacket;
+  packet_array: array of byte;
+  buf: pointer;
+  test: smallint;
+begin
+  Writeln('Packet is capture');
+  SetLength(packet_array, pkthdr.len);
+  Move(packet_data^, packet_array[0], Length(packet_array));
+  etherhdr := PEtherHeader(@packet_array[0]);
+  Writeln('Ethertype: 0x' + IntToHex(ntohs(etherhdr.ethertype), 4));
+  if ntohs(etherhdr.ethertype) = ETHERTYPE_ARP then
+  begin
+    Writeln('ARP');
+    arp_payload_income := PArpPacket(@packet_array[SizeOf(TetherHeader)]);
+    if IPToString(arp_payload_income.spa) = '192.168.31.1' then
+      Writeln('Response detected: ' + Utils.MACToString(arp_payload_income.sha))
+    else
+      Writeln('response not detected');
+
+    // Writeln(IPToString(arp_payload_income.spa));
+  end;
+  if timer.isTimeout then
+    pcap_breakloop(adhandle);
+
+end;
+
+begin
+  try
+   a:=TPcap.Create;
+   for i in a.FInterfaces do writeln(i.
+
+   readln;
+  except
+    on E: Exception do
+    begin
+      Writeln(E.ClassName, ': ', E.Message);
+      readln;
+    end;
+  end;
+
+end.

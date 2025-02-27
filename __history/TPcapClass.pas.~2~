@@ -1,0 +1,52 @@
+unit TPcapClass;
+
+interface
+
+uses
+  PcapTypes, System.Generics.Collections, System.Classes, SysUtils;
+
+type
+  TPcapInterfaces = array of TPcap_if;
+
+  TPcap = class
+  protected
+    FErrbuf: TPcapErrbuf;
+    FAllDevices: TPcap_if;
+    function FindAllDevices(): TList<TPcap_if>;
+
+  public
+    FInterfaces: TList<TPcap_if>;
+    constructor Create(); virtual;
+
+  end;
+
+implementation
+
+constructor TPcap.Create;
+begin
+  FInterfaces := FindAllDevices();
+  if FInterfaces = nil then
+    raise Exception.Create('Fetching interface error: ' + FErrbuf);
+
+end;
+
+function TPcap.FindAllDevices: TList<TPcap_if>;
+var
+  interfaceList: TList<TPcap_if>;
+begin
+  if pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nil, @FAllDevices, @FErrbuf) = -1
+  then
+    Result := nil
+  else
+  begin
+    while Assigned(FAllDevices.next) do
+    begin
+      interfaceList := TList<TPcap_if>.Create;
+      interfaceList.Add(FAllDevices);
+      FAllDevices := FAllDevices.next^;
+    end;
+    Result := interfaceList;
+  end;
+end;
+
+end.

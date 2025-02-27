@@ -1,0 +1,13 @@
+unit UserInteractive;
+
+interface
+
+TUserInteractive = class
+  public static function GetInterface(msg:string):integer;
+end;
+
+implementation
+
+public static function TUserInteractiver.GetInterface(msg:string):integer;
+
+end.

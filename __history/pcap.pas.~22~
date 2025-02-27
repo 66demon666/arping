@@ -1,0 +1,48 @@
+unit pcap;
+
+interface
+
+uses
+  PcapTypes, System.Generics.Collections;
+
+type
+  TPcapInterfaces = array of TPcap_if;
+
+  TPcap = class
+  protected
+    FErrbuf: TPcapErrbuf;
+    FAllDevices, d: TPcap_if;
+    function FindAllDevices(): TPcapInterfaces;
+  public
+    interfaces: TList<TPcap_if>;
+    constructor
+
+  end;
+
+implementation
+
+function TPcap.FindAllDevices: TPcapInterfaces;
+var
+  findalldevsResult: integer;
+begin
+  findalldevsResult := pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nil,
+    @FAllDevices, @FErrbuf);
+  if findalldevsResult = -1 then
+    Result := nil
+  else
+  begin
+  d:=FAllDevices;
+    while Assigned(d.next) do
+    begin
+      interfaces:=TList<TPcap_if>.Create;
+      interfaces.Add(d);
+      d := d.next^;
+    end;
+    writeln('Fetching finished');
+    for var i in interfaces do writeln(i.description);
+
+
+  end;
+end;
+
+end.
