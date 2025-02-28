@@ -1,0 +1,51 @@
+unit UserInteractive;
+
+interface
+
+uses
+  TPcapClass, SysUtils, PcapUtils, PcapTypes;
+
+type
+
+  TUserInteractive = class
+  private
+    pcap: PPcap;
+  public
+    function GetInterface(msg: string): TPcap_if;
+    constructor Create(pcap: PPcap);
+  end;
+
+implementation
+
+constructor TUserInteractive.Create(pcap: PPcap);
+begin
+  self.pcap := pcap;
+end;
+
+function TUserInteractive.GetInterface(msg: string): TPcap_if;
+var
+  i: integer;
+  selectedIndex: integer;
+begin
+  if pcap^.FInterfaces.Count > 1 then
+  begin
+    writeln('Choose interface:');
+    for var interfaceItem in pcap^.FInterfaces do
+    begin
+      writeln(IntToStr(i) + ': ' + interfaceItem.description + '(' +
+        IntToIp(interfaceItem.addresses.addr.sin_addr.S_addr) + ')');
+      Inc(i);
+    end;
+    repeat
+      readln(selectedIndex);
+    until (selectedIndex >= 0) and (selectedIndex <= pcap^.FInterfaces.Count);
+
+  end
+  else
+  begin
+    Result := pcap^.FInterfaces[0];
+  end;
+
+end;
+
+end.

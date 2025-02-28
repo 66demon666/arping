@@ -6,19 +6,18 @@ const
   ETHERTYPE_ARP = $0806;
   ETHERTYPE_IP = $0800;
 
-
 type
 
-TPcapIP = array [0..3] of Byte;
-TPcapMAC = array [0..5] of Byte;
+  TPcapIP = array [0 .. 3] of Byte;
+  TPcapMAC = array [0 .. 5] of Byte;
 
   PArpPacket = ^TArpPacket;
 
   TArpPacket = packed record
     htype: smallint; // hardware address type. Always 1 for Ethernet        0-1
     ptype: smallint; // protocol address type. 2048 for ipv4                2-3
-    hlen: byte; // hardware address length. 6 for MAC addresses             4
-    plen: byte; // protocol address length. 4 for ipv4                      5
+    hlen: Byte; // hardware address length. 6 for MAC addresses             4
+    plen: Byte; // protocol address length. 4 for ipv4                      5
     oper: smallint; // code of opeation. 1 for request, 2 for reply         6-7
     sha: TPcapMAC; // sender hardware (MAC) address           8-13
     spa: TPcapIP; // sender protocol (ip) address            14-17

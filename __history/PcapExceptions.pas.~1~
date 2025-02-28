@@ -1,4 +1,4 @@
-unit TPcapExceptions;
+unit PcapExceptions;
 
 interface
 

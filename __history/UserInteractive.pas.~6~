@@ -1,0 +1,38 @@
+unit UserInteractive;
+
+interface
+
+uses
+  TPcapClass, SysUtils, PcapUtils;
+
+type
+
+  TUserInteractive = class
+  private
+    pcap: PPcap;
+  public
+    function GetInterface(msg: string): integer;
+    constructor Create(pcap: PPcap);
+  end;
+
+implementation
+
+constructor TUserInteractive.Create(pcap: PPcap);
+begin
+  self.pcap:=pcap;
+end;
+
+function TUserInteractive.GetInterface(msg: string): integer;
+var
+  i: integer;
+begin
+  writeln('Choose interface:');
+  for var interfaceItem in pcap.FInterfaces do
+  begin
+    writeln(IntToStr(i) + ': ' + interfaceItem.description + '(' +
+      IntToIp(interfaceItem.addresses.addr.sin_addr.S_addr) + ')');
+    Inc(i);
+  end;
+end;
+
+end.

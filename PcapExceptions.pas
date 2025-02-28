@@ -3,10 +3,11 @@ unit PcapExceptions;
 interface
 
 uses
-System.Classes, SysUtils;
+  System.Classes, SysUtils;
 
 type
-EFindAllDevicesException = class(Exception) end;
+  EFindAllDevicesException = class(Exception)
+  end;
 
 implementation
 

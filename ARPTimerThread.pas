@@ -3,27 +3,27 @@ unit ARPTimerThread;
 interface
 
 uses
-  System.Classes, SysUtils, DateUtils, PcapTypes;
+        System.Classes, SysUtils, DateUtils, PcapTypes;
 
 type
-  Timer = class(TThread)
-  protected
-    timeout: integer;
-    adhandle: PPcap_t;
+        Timer = class(TThread)
+        protected
+                timeout: integer;
+                adhandle: PPcap_t;
 
-    procedure Execute; override;
-  public
-    isTimeout: Boolean;
-    constructor Create(timeout: integer; adhandle: PPcap_t);
-  end;
+                procedure Execute; override;
+        public
+                isTimeout: Boolean;
+                constructor Create(timeout: integer; adhandle: PPcap_t);
+        end;
 
 implementation
 
 constructor Timer.Create(timeout: integer; adhandle: PPcap_t);
 begin
-  inherited Create(false);
-  self.timeout := timeout;
-  self.adhandle := adhandle;
+        inherited Create(false);
+        self.timeout := timeout;
+        self.adhandle := adhandle;
 end;
 
 {
@@ -61,13 +61,13 @@ end;
 
 procedure Timer.Execute;
 begin
-  NameThreadForDebugging('ARP Timer');
-  isTimeout := false;
-  sleep(timeout);
-  writeln('Thread completed');
-  pcap_breakloop(adhandle);
-  self.FreeOnTerminate := true;
-  { Place thread code here }
+        NameThreadForDebugging('ARP Timer');
+        isTimeout := false;
+        sleep(timeout);
+        writeln('Thread completed');
+        pcap_breakloop(adhandle);
+        self.FreeOnTerminate := true;
+        { Place thread code here }
 end;
 
 end.

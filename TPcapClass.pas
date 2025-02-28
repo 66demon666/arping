@@ -3,10 +3,13 @@ unit TPcapClass;
 interface
 
 uses
-  PcapTypes, System.Generics.Collections, System.Classes, SysUtils, PcapExceptions;
+  PcapTypes, System.Generics.Collections, System.Classes, SysUtils,
+  PcapExceptions;
 
 type
   TPcapInterfaces = array of TPcap_if;
+
+  PPcap = ^TPcap;
 
   TPcap = class
   protected

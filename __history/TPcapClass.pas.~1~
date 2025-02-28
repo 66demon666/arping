@@ -1,9 +1,9 @@
-unit TPcap;
+unit TPcapClass;
 
 interface
 
 uses
-  PcapTypes, System.Generics.Collections, System.Classes, SysUtils;
+  PcapTypes, System.Generics.Collections, System.Classes, SysUtils, PcapExceptions;
 
 type
   TPcapInterfaces = array of TPcap_if;
@@ -26,7 +26,7 @@ constructor TPcap.Create;
 begin
   FInterfaces := FindAllDevices();
   if FInterfaces = nil then
-    raise Exception.Create('Fetching interface error: ' + FErrbuf);
+    raise EFindAllDevicesException.Create(FErrbuf);
 
 end;
 
