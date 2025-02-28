@@ -1,1 +1,5 @@
-pcap.h
+*
+!*.pas
+!*.dpr
+!*.dproj
+!/Win64/
