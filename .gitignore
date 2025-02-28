@@ -2,4 +2,4 @@
 !*.pas
 !*.dpr
 !*.dproj
-!/Win64/
+!/Win64/**.exe
