@@ -9,6 +9,9 @@ type
   EFindAllDevicesException = class(Exception)
   end;
 
+  EOpenInterfaceException = class(Exception)
+  end;
+
 implementation
 
 end.

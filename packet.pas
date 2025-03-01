@@ -2,6 +2,8 @@ unit packet;
 
 interface
 
+uses TPcapClass;
+
 const
   ETHERTYPE_ARP = $0806;
   ETHERTYPE_IP = $0800;
@@ -31,6 +33,19 @@ type
     destination: TPcapMAC; // target MAC address
     source: TPcapMAC; // sender MAC address
     ethertype: word; // type of incapsulate protocol. 0x0800 for ipv4
+  end;
+
+  TNetworkHeader = class
+  public
+    data: packed array of Byte;
+    constructor Create(pcap: TPcap); virtual; abstract;
+    function Build(): Boolean; virtual; abstract;
+  end;
+
+  TNetworkPacket = class
+  public
+    FData: packed array of Byte;
+    FChunks: array of TNetworkHeader;
   end;
 
 implementation

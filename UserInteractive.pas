@@ -11,6 +11,7 @@ type
   private
     pcap: PPcap;
   public
+    FSelectedInterface: TPcap_if;
     function GetInterface(msg: string = 'Choose interface:'): TPcap_if;
     constructor Create(pcap: PPcap);
   end;

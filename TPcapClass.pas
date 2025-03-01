@@ -15,15 +15,34 @@ type
   protected
     FErrbuf: TPcapErrbuf;
     FAllDevices: TPcap_if;
+    FPcapHandle: PPcap_t;
+  public
     function FindAllDevices(): TList<TPcap_if>;
+    procedure OpenInterface(interfaceToOpen: PPcap_if; caplen: integer = 65536;
+      capmode: integer = PCAP_OPENFLAG_PROMISCUOUS; timeout: integer = 1000);
 
   public
+
     FInterfaces: TList<TPcap_if>;
     constructor Create(); virtual;
 
   end;
 
 implementation
+
+procedure TPcap.OpenInterface(interfaceToOpen: PPcap_if;
+  caplen: integer = 65536; capmode: integer = PCAP_OPENFLAG_PROMISCUOUS;
+  timeout: integer = 1000);
+var
+  adhandle: PPcap_t;
+begin
+  adhandle := pcap_open(interfaceToOpen^.name, caplen, capmode, timeout, nil,
+    self.FErrbuf);
+  if adhandle = nil then
+    raise EOpenInterfaceException.Create(self.FErrbuf)
+  else
+    self.FPcapHandle := adhandle;
+end;
 
 constructor TPcap.Create;
 begin

@@ -4,7 +4,6 @@ program arping;
 {$R *.res}
 
 uses
-  ARPTimerThread in 'ARPTimerThread.pas',
   DebugUtils in 'DebugUtils.pas',
   packet in 'packet.pas',
   PcapExceptions in 'PcapExceptions.pas',
@@ -29,12 +28,21 @@ begin
     except
       on e: EFindAllDevicesException do
         writeln('Interfaces fetching error: ' + e.Message);
-      on e: Exception do
-        writeln('Another exception');
     end;
     UserInteractive := TUserInteractive.Create(@pcap);
-    writeln('Selected interface: ' + UserInteractive.GetInterface('Select interface:')
-      .description);
+    UserInteractive.FSelectedInterface := UserInteractive.GetInterface
+      ('Select interface:');
+    writeln('Selected interface: ' + UserInteractive.FSelectedInterface.
+      description);
+    try
+      begin
+        pcap.OpenInterface(@UserInteractive.FSelectedInterface);
+        writeln('Adapter open in promiscious mode');
+      end;
+    except
+      on e: EOpenInterfaceException do
+        writeln('Open adapter failed: ' + e.Message);
+    end;
 
     readln;
   except
