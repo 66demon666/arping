@@ -13,10 +13,12 @@ type
 
   TPcap = class
   protected
+
     FErrbuf: TPcapErrbuf;
     FAllDevices: TPcap_if;
     FPcapHandle: PPcap_t;
   public
+    FSelectedInterface: TPcap_if;
     function FindAllDevices(): TList<TPcap_if>;
     procedure OpenInterface(interfaceToOpen: PPcap_if; caplen: integer = 65536;
       capmode: integer = PCAP_OPENFLAG_PROMISCUOUS; timeout: integer = 1000);

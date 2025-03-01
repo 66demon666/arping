@@ -10,13 +10,15 @@ const
   PCAP_OPENFLAG_PROMISCUOUS = 1;
 
 type
+  PPackedBytes = ^TPackedBytes;
+  TPackedBytes = packed array of byte;
 
   Pbpf_insn = ^Tbpf_insn;
 
   Tbpf_insn = record
     code: Word; // Код операции
-    jt: Byte; // Индекс перехода, если true
-    jf: Byte; // Индекс перехода, если false
+    jt: byte; // Индекс перехода, если true
+    jf: byte; // Индекс перехода, если false
     k: Cardinal; // Дополнительные данные
   end;
 
