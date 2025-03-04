@@ -101,6 +101,7 @@ function pcap_compile(pcap_t: PPcap_t; fp: Pbpf_program; str: PAnsiChar;
 function pcap_setfilter(pcap_t: PPcap_t; fp: Pbpf_program): integer; stdcall;
   external 'wpcap.dll';
 procedure pcap_breakloop(pcap_t: PPcap_t); stdcall; external 'wpcap.dll';
+function pcap_geterr(pcap_t:PPcap_t):PAnsiChar; cdecl; external 'wpcap.dll';
 
 implementation
 

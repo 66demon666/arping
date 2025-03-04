@@ -13,24 +13,38 @@ type
 
   TPcap = class
   protected
-
     FErrbuf: TPcapErrbuf;
-    FAllDevices: TPcap_if;
+    FAllDevices: PPcap_if;
     FPcapHandle: PPcap_t;
+    FSelectedInterface: PPcap_if;
+    FInterfaces: TList<PPcap_if>;
+    procedure FindAllDevices();
   public
-    FSelectedInterface: TPcap_if;
-    function FindAllDevices(): TList<TPcap_if>;
     procedure OpenInterface(interfaceToOpen: PPcap_if; caplen: integer = 65536;
       capmode: integer = PCAP_OPENFLAG_PROMISCUOUS; timeout: integer = 1000);
-
-  public
-
-    FInterfaces: TList<TPcap_if>;
-    constructor Create(); virtual;
+    function SendPacket(packet:PPackedBytes):boolean;
+    property errorBuffer:TPcapErrbuf read FErrbuf;
+    property selectedInterface:PPcap_if read FSelectedInterface write FSelectedInterface;
+    property interfaces:TList<PPcap_if> read FInterfaces;
+    property handle:PPcap_t read FPcapHandle;
+    constructor Create();
 
   end;
 
 implementation
+
+function TPcap.SendPacket(packet: PPackedBytes): Boolean;
+var
+packetBytes:TPackedBytes;
+error:PAnsiChar;
+begin
+packetBytes:=packet^;
+writeln('Packet size: ' + IntToStr(Length(packetBytes)));
+Result:=(pcap_sendpacket(self.handle, PByte(packetBytes), Length(packetBytes)) = 0);
+error:=pcap_geterr(handle);
+Move(error^, self.FErrbuf[0], StrLen(error));
+writeln('Errbuf: ' + self.errorBuffer);
+end;
 
 procedure TPcap.OpenInterface(interfaceToOpen: PPcap_if;
   caplen: integer = 65536; capmode: integer = PCAP_OPENFLAG_PROMISCUOUS;
@@ -48,29 +62,27 @@ end;
 
 constructor TPcap.Create;
 begin
-  FInterfaces := FindAllDevices();
-  if FInterfaces = nil then
-    raise EFindAllDevicesException.Create(FErrbuf);
-
+  self.FInterfaces:=TList<PPcap_if>.Create;
+  FindAllDevices();
 end;
 
-function TPcap.FindAllDevices: TList<TPcap_if>;
+procedure TPcap.FindAllDevices;
 var
-  interfaceList: TList<TPcap_if>;
+  interfaceList: TList<PPcap_if>;
 begin
-  if pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nil, @FAllDevices, @FErrbuf) = -1
-  then
-    Result := nil
-  else
+  if pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nil, @self.FAllDevices, @self.errorBuffer) = -1 then
+begin
+  raise EFindAllDevicesException.Create(FErrbuf);
+  writeln('FindAllDevices error');
+end
+else
+begin
+while Assigned(@self.FAllDevices.next) do
   begin
-    while Assigned(FAllDevices.next) do
-    begin
-      interfaceList := TList<TPcap_if>.Create;
-      interfaceList.Add(FAllDevices);
-      FAllDevices := FAllDevices.next^;
-    end;
-    Result := interfaceList;
+    self.FInterfaces.Add(FAllDevices);
+    FAllDevices:=FAllDevices.next;
   end;
+end;
 end;
 
 end.

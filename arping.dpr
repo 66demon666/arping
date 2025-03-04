@@ -17,6 +17,7 @@ const
   IF_ID = '\Device\NPF_{077C8EF5-CB84-4C34-9C2A-66006D41D835}';
   IF_ID_2 = '\Device\NPF_{9C22769D-724A-4B92-814A-605A36AAF2CC}';
   HOME_MAC: TPcapMAC = ($50, $E5, $49, $DE, $68, $89);
+  WORK_MAC: TPcapMAC = ($38, $D5, $47, $19, $DB, $D6);
   BROADCAST_MAC: TPcapMAC = ($50, $E5, $49, $DE, $68, $89);
 
 var
@@ -25,7 +26,7 @@ var
   ethernetHeader: TEthernetHeader;
   arpPayload: TArpPacket;
   networkPacket: TNetworkPacket;
-
+  packetBuffer:TPackedBytes;
 begin
   try
     try
@@ -39,37 +40,44 @@ begin
       ('Select interface:');
     writeln('Selected interface: ' + UserInteractive.FSelectedInterface.
       description);
-    try
+       try
       begin
-        pcap.OpenInterface(@UserInteractive.FSelectedInterface);
+        pcap.OpenInterface(UserInteractive.FSelectedInterface);
         writeln('Adapter open in promiscious mode');
       end;
     except
       on e: EOpenInterfaceException do
         writeln('Open adapter failed: ' + e.Message);
     end;
-    ethernetHeader := TEthernetHeader.Create(pcap);
+ ethernetHeader := TEthernetHeader.Create(pcap);
     FillChar(ethernetHeader.FDestination,
       SizeOf(ethernetHeader.FDestination), $FF);
-    ethernetHeader.FSource := HOME_MAC;
+    ethernetHeader.FSource := WORK_MAC;
     ethernetHeader.FEthertype := ETHERTYPE_ARP;
     arpPayload := TArpPacket.Create();
     arpPayload.oper := 1;
-    arpPayload.sha := HOME_MAC;
-    arpPayload.spa[0] := $C0;
-    arpPayload.spa[1] := $A8;
-    arpPayload.spa[2] := $1F;
-    arpPayload.spa[3] := $A;
+    arpPayload.sha := WORK_MAC;
+    arpPayload.spa[0] := 10;
+    arpPayload.spa[1] := 1;
+    arpPayload.spa[2] := 2;
+    arpPayload.spa[3] := 215;
     FillChar(arpPayload.tha, SizeOf(arpPayload.tha), $FF);
-    arpPayload.tpa[0] := $C0;
-    arpPayload.tpa[1] := $A8;
-    arpPayload.tpa[2] := $1F;
-    arpPayload.tpa[3] := $1;
+    arpPayload.tpa[0] := 10;
+    arpPayload.tpa[1] := 1;
+    arpPayload.tpa[2] := 2;
+    arpPayload.tpa[3] := 143;
     //PrintArray(arpPayload.Build);
     networkPacket := TNetworkPacket.Create;
     networkPacket.addHeader(ethernetHeader);
     networkPacket.addHeader(arpPayload);
-    PrintArray(networkPacket.BuildPacket);
+    packetBuffer:=networkPacket.BuildPacket;
+    PrintArray(packetBuffer);
+    while True do
+    begin
+    pcap.SendPacket(@packetBuffer);
+    sleep(100);
+    end;
+
 
     readln;
   except
