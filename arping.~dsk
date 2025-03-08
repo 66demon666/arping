@@ -15,12 +15,12 @@ File_12=TSourceModule,'D:\Документы\GitHub\arping\packet.pas',0,1,1,1,1
 
 [Modules]
 Module0=D:\Документы\arping\arping.dproj
-Module1=D:\Документы\arping\DebugUtils.pas
-Module2=D:\Документы\arping\packet.pas
-Module3=D:\Документы\arping\TPcapClass.pas
-Module4=D:\Документы\arping\PcapExceptions.pas
-Module5=D:\Документы\arping\PcapTypes.pas
-Module6=D:\Документы\arping\PcapUtils.pas
+Module1=D:\Документы\arping\packet.pas
+Module2=D:\Документы\arping\DebugUtils.pas
+Module3=D:\Документы\arping\PcapUtils.pas
+Module4=D:\Документы\arping\TPcapClass.pas
+Module5=D:\Документы\arping\PcapExceptions.pas
+Module6=D:\Документы\arping\PcapTypes.pas
 Module7=D:\Документы\arping\UserInteractive.pas
 Module8=D:\Документы\arping\pcap.h
 Count=9
@@ -29,10 +29,13 @@ EditWindowCount=1
 [D:\Документы\arping\arping.dproj]
 ModuleType=TBaseProject
 
+[D:\Документы\arping\packet.pas]
+ModuleType=TSourceModule
+
 [D:\Документы\arping\DebugUtils.pas]
 ModuleType=TSourceModule
 
-[D:\Документы\arping\packet.pas]
+[D:\Документы\arping\PcapUtils.pas]
 ModuleType=TSourceModule
 
 [D:\Документы\arping\TPcapClass.pas]
@@ -42,9 +45,6 @@ ModuleType=TSourceModule
 ModuleType=TSourceModule
 
 [D:\Документы\arping\PcapTypes.pas]
-ModuleType=TSourceModule
-
-[D:\Документы\arping\PcapUtils.pas]
 ModuleType=TSourceModule
 
 [D:\Документы\arping\UserInteractive.pas]
@@ -101,9 +101,9 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 [View0]
 CustomEditViewType=TEditView
 Module=D:\Документы\arping\arping.dpr
-CursorX=54
-CursorY=49
-TopLine=34
+CursorX=66
+CursorY=20
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -112,8 +112,8 @@ EditViewName=D:\Документы\arping\arping.dpr
 [View1]
 CustomEditViewType=TEditView
 Module=D:\Документы\arping\DebugUtils.pas
-CursorX=1
-CursorY=1
+CursorX=51
+CursorY=7
 TopLine=1
 LeftCol=1
 Elisions=
@@ -123,9 +123,9 @@ EditViewName=D:\Документы\arping\DebugUtils.pas
 [View2]
 CustomEditViewType=TEditView
 Module=D:\Документы\arping\packet.pas
-CursorX=20
-CursorY=79
-TopLine=52
+CursorX=23
+CursorY=127
+TopLine=108
 LeftCol=1
 Elisions=
 Bookmarks=

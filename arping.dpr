@@ -28,6 +28,8 @@ var
   networkPacket: TNetworkPacket;
   packetBuffer:TPackedBytes;
 begin
+
+
   try
     try
       pcap := TPcap.Create;
@@ -36,11 +38,12 @@ begin
         writeln('Interfaces fetching error: ' + e.Message);
     end;
     UserInteractive := TUserInteractive.Create(@pcap);
-    UserInteractive.FSelectedInterface := UserInteractive.GetInterface
+    UserInteractive.GetInterface();
+    {UserInteractive.FSelectedInterface := UserInteractive.GetInterface
       ('Select interface:');
-    writeln('Selected interface: ' + UserInteractive.FSelectedInterface.
+     writeln('Selected interface: ' + UserInteractive.FSelectedInterface.
       description);
-       try
+      try
       begin
         pcap.OpenInterface(UserInteractive.FSelectedInterface);
         writeln('Adapter open in promiscious mode');
@@ -52,20 +55,20 @@ begin
  ethernetHeader := TEthernetHeader.Create(pcap);
     FillChar(ethernetHeader.FDestination,
       SizeOf(ethernetHeader.FDestination), $FF);
-    ethernetHeader.FSource := WORK_MAC;
+    ethernetHeader.FSource := HOME_MAC;
     ethernetHeader.FEthertype := ETHERTYPE_ARP;
     arpPayload := TArpPacket.Create();
     arpPayload.oper := 1;
-    arpPayload.sha := WORK_MAC;
-    arpPayload.spa[0] := 10;
-    arpPayload.spa[1] := 1;
-    arpPayload.spa[2] := 2;
-    arpPayload.spa[3] := 215;
+    arpPayload.sha := HOME_MAC;
+    arpPayload.spa[0] := 192;
+    arpPayload.spa[1] := 168;
+    arpPayload.spa[2] := 31;
+    arpPayload.spa[3] := 10;
     FillChar(arpPayload.tha, SizeOf(arpPayload.tha), $FF);
-    arpPayload.tpa[0] := 10;
-    arpPayload.tpa[1] := 1;
-    arpPayload.tpa[2] := 2;
-    arpPayload.tpa[3] := 143;
+    arpPayload.tpa[0] := 192;
+    arpPayload.tpa[1] := 168;
+    arpPayload.tpa[2] := 31;
+    arpPayload.tpa[3] := 1;
     //PrintArray(arpPayload.Build);
     networkPacket := TNetworkPacket.Create;
     networkPacket.addHeader(ethernetHeader);
@@ -76,7 +79,7 @@ begin
     begin
     pcap.SendPacket(@packetBuffer);
     sleep(100);
-    end;
+    end;   }
 
 
     readln;

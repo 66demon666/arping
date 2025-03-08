@@ -3,7 +3,8 @@ unit TPcapClass;
 interface
 
 uses
-  PcapTypes, System.Generics.Collections, System.Classes, SysUtils,
+  PcapUtils, PcapTypes, System.Generics.Collections, System.Classes,
+  SysUtils,
   PcapExceptions;
 
 type
@@ -22,28 +23,30 @@ type
   public
     procedure OpenInterface(interfaceToOpen: PPcap_if; caplen: integer = 65536;
       capmode: integer = PCAP_OPENFLAG_PROMISCUOUS; timeout: integer = 1000);
-    function SendPacket(packet:PPackedBytes):boolean;
-    property errorBuffer:TPcapErrbuf read FErrbuf;
-    property selectedInterface:PPcap_if read FSelectedInterface write FSelectedInterface;
-    property interfaces:TList<PPcap_if> read FInterfaces;
-    property handle:PPcap_t read FPcapHandle;
+    function SendPacket(packet: PPackedBytes): boolean;
+    property errorBuffer: TPcapErrbuf read FErrbuf;
+    property selectedInterface: PPcap_if read FSelectedInterface
+      write FSelectedInterface;
+    property interfaces: TList<PPcap_if> read FInterfaces;
+    property handle: PPcap_t read FPcapHandle;
     constructor Create();
 
   end;
 
 implementation
 
-function TPcap.SendPacket(packet: PPackedBytes): Boolean;
+function TPcap.SendPacket(packet: PPackedBytes): boolean;
 var
-packetBytes:TPackedBytes;
-error:PAnsiChar;
+  packetBytes: TPackedBytes;
+  error: PAnsiChar;
 begin
-packetBytes:=packet^;
-writeln('Packet size: ' + IntToStr(Length(packetBytes)));
-Result:=(pcap_sendpacket(self.handle, PByte(packetBytes), Length(packetBytes)) = 0);
-error:=pcap_geterr(handle);
-Move(error^, self.FErrbuf[0], StrLen(error));
-writeln('Errbuf: ' + self.errorBuffer);
+  packetBytes := packet^;
+  writeln('Packet size: ' + IntToStr(Length(packetBytes)));
+  Result := (pcap_sendpacket(self.handle, PByte(packetBytes),
+    Length(packetBytes)) = 0);
+  error := pcap_geterr(handle);
+  Move(error^, self.FErrbuf[0], StrLen(error));
+  writeln('Errbuf: ' + self.errorBuffer);
 end;
 
 procedure TPcap.OpenInterface(interfaceToOpen: PPcap_if;
@@ -62,7 +65,7 @@ end;
 
 constructor TPcap.Create;
 begin
-  self.FInterfaces:=TList<PPcap_if>.Create;
+  self.FInterfaces := TList<PPcap_if>.Create;
   FindAllDevices();
 end;
 
@@ -70,19 +73,31 @@ procedure TPcap.FindAllDevices;
 var
   interfaceList: TList<PPcap_if>;
 begin
-  if pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nil, @self.FAllDevices, @self.errorBuffer) = -1 then
-begin
-  raise EFindAllDevicesException.Create(FErrbuf);
-  writeln('FindAllDevices error');
-end
-else
-begin
-while Assigned(@self.FAllDevices.next) do
+  if pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nil, @self.FAllDevices,
+    @self.errorBuffer) = -1 then
   begin
-    self.FInterfaces.Add(FAllDevices);
-    FAllDevices:=FAllDevices.next;
+    raise EFindAllDevicesException.Create(FErrbuf);
+    writeln('FindAllDevices error');
+  end
+  else
+  begin
+    while Assigned(@self.FAllDevices.next) do
+    begin
+      if not Assigned(FAllDevices.addresses) then
+      begin
+        FAllDevices := FAllDevices.next;
+        continue;
+      end
+      else
+      begin
+        if IntToIP(ntohl(FAllDevices.addresses.addr.sin_addr.S_addr)) then
+
+          self.FInterfaces.Add(FAllDevices);
+        FAllDevices := FAllDevices.next;
+      end;
+
+    end;
   end;
-end;
 end;
 
 end.

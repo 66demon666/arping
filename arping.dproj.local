@@ -2,8 +2,8 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>1899.12.30 00:00:00.000.889,=D:\Документы\Embarcadero\Studio\Projects\arping\PcapTypes.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.486,D:\Документы\Embarcadero\Studio\Projects\arping.dproj=D:\Документы\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.643,D:\Документы\Embarcadero\Studio\Projects\arping\arping.dproj=D:\Документы\Embarcadero\Studio\Projects\arping.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.643,D:\Документы\Embarcadero\Studio\Projects\arping.dproj=D:\Документы\Embarcadero\Studio\Projects\arping\arping.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.486,D:\Документы\Embarcadero\Studio\Projects\Project1.dproj=D:\Документы\Embarcadero\Studio\Projects\arping.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.650,=D:\Документы\Embarcadero\Studio\Projects\arping\ARPTimerThread.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.835,=D:\Документы\Embarcadero\Studio\Projects\arping\PcapExceptions.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.945,=D:\Документы\Embarcadero\Studio\Projects\arping\PcapUtils.pas</Transaction>
@@ -13,7 +13,7 @@
     <Transaction>1899.12.30 00:00:00.000.055,=D:\Документы\Embarcadero\Studio\Projects\arping\UserInteractive.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.714,=D:\Документы\Embarcadero\Studio\Projects\arping\DebugUtils.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.411,D:\Документы\arping\ARPTimerThread.pas=</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.667,=D:\Документы\Embarcadero\Studio\Projects\arping\packet.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.775,=D:\Документы\Embarcadero\Studio\Projects\arping\packet.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.667,=D:\Документы\Embarcadero\Studio\Projects\arping\packet.pas</Transaction>
   </Transactions>
 </BorlandProject>

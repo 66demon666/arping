@@ -24,6 +24,11 @@ begin
     IntToHex(mac[4], 2), IntToHex(mac[5], 2)]);
 end;
 
+function StringToIP(ipstring: string):TPcapIP;
+begin
+
+end;
+
 function IntToIP(ip: Integer): string;
 begin
   Result := Format('%d.%d.%d.%d', [(ip shr 24) and $FF, (ip shr 16) and $FF,

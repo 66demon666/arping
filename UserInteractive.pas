@@ -3,7 +3,7 @@ unit UserInteractive;
 interface
 
 uses
-  TPcapClass, SysUtils, PcapUtils, PcapTypes;
+  TPcapClass, SysUtils, PcapUtils, PcapTypes, WinSock;
 
 type
 
@@ -28,6 +28,7 @@ function TUserInteractive.GetInterface(msg: string = 'Choose interface:')
 var
   i: integer;
   selectedIndex: integer;
+  ipTemp: string;
 begin
   if pcap.interfaces.Count > 1 then
   begin
@@ -35,8 +36,11 @@ begin
     writeln(msg);
     for var interfaceItem in pcap.interfaces do
     begin
-      writeln(Format('%d: %s (%s)', [IntToStr(i), interfaceItem^.description,
-        IntToIp(interfaceItem^.addresses.addr.sin_addr.S_addr)]));
+      if Assigned(interfaceItem.addresses) then
+        ipTemp := IntToIp(ntohl(interfaceItem.addresses.addr.sin_addr.S_addr))
+      else
+        ipTemp := 'No address';
+      writeln(Format('%d: %s (%s)', [i, interfaceItem^.description, ipTemp]));
       Inc(i);
     end;
     repeat
